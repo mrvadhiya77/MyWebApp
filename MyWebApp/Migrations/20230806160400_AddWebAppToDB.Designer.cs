@@ -11,7 +11,7 @@ using MyWebApp.Data;
 namespace MyWebApp.Migrations
 {
     [DbContext(typeof(MyWebAppContext))]
-    [Migration("20230806141907_AddWebAppToDB")]
+    [Migration("20230806160400_AddWebAppToDB")]
     partial class AddWebAppToDB
     {
         /// <inheritdoc />
@@ -40,7 +40,7 @@ namespace MyWebApp.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("_categories");
+                    b.ToTable("Categories");
                 });
 #pragma warning restore 612, 618
         }
