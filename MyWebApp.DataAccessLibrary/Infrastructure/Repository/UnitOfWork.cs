@@ -1,0 +1,28 @@
+﻿using MyWebApp.DataAccesLayer.Data;
+using MyWebApp.DataAccessLibrary.Infrastructure.IRepository;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace MyWebApp.DataAccessLibrary.Infrastructure.Repository
+{
+    public class UnitOfWork : IUnitOfWork
+    {
+        public ICategoryRepository Categories { get; private set; }
+        private readonly MyWebAppContext _context;
+
+        public UnitOfWork(MyWebAppContext context) 
+        {
+            _context = context;
+            Categories = new CategoryRepository(context);
+        }
+
+
+        public void Save()
+        {
+            _context.SaveChanges();
+        }
+    }
+}

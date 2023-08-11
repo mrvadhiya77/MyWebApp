@@ -1,11 +1,13 @@
 using Microsoft.EntityFrameworkCore;
-using MyWebApp.Data;
+using MyWebApp.DataAccesLayer.Data;
+using MyWebApp.DataAccessLibrary.Infrastructure.IRepository;
+using MyWebApp.DataAccessLibrary.Infrastructure.Repository;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
-
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 // Configuration for mysql database
 var connectionStrings = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<MyWebAppContext>(options =>
