@@ -1,0 +1,58 @@
+﻿@model MyWebApp.Models.ViewModels.ProductVM
+@{
+    ViewData["Title"] = "Show Product";
+}
+
+<div class="container p-4">
+    <div class="row p-3">
+        <div class="col-6">
+            <h2 class="text-primary">Products</h2>
+        </div>
+        <div class="col-6 text-end">
+            <a class="btn btn-primary" asp-action="AddEditProduct" asp-controller="Category">Add Product&nbsp;<i class="bi bi-plus-circle"></i></a>
+        </div>
+    </div>
+</div>
+<table class="table table-bordered table-striped" style="width=100%">
+    <thead>
+        <tr>
+            <th>
+                Product Name
+            </th>
+            <th>
+                Discription
+            </th>
+            <th>
+                Price
+            </th>
+            <th>
+                Category Id
+            </th>
+        </tr>
+    </thead>
+
+    <tbody>
+        @foreach(var item in Model.products)
+        {   
+        <tr>
+            <td>
+                @item.Name
+            </td>
+            <td>
+                @item.Description
+            </td>
+            <td>
+                @item.Price
+            </td>
+            <td>
+                @item.CategoryId
+            </td>
+            <td class="group">
+                    <a asp-action="AddEditProduct" asp-controller="Product" asp-route-id="@item.Id"><i class="bi bi-pencil-square"></i></a>
+                    <a asp-action="DeleteProduct" asp-controller="Product" asp-route-id="@item.Id"><i class="bi bi-trash-fill"></i></a>
+            </td>
+        </tr>
+        }
+    </tbody>
+</table>
+

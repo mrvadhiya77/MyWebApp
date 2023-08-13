@@ -1,12 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MyWebApp.DataAccesLayer.Data;
 using MyWebApp.DataAccessLibrary.Infrastructure.IRepository;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MyWebApp.DataAccessLibrary.Infrastructure.Repository
 {
@@ -46,10 +41,5 @@ namespace MyWebApp.DataAccessLibrary.Infrastructure.Repository
         {
             return _dbSet.Where(predicate).FirstOrDefault();
         }
-
-        //public void Update(T entity)
-        //{
-        //    _dbSet.Update(entity);
-        //}
     }
 }

@@ -11,12 +11,14 @@ namespace MyWebApp.DataAccessLibrary.Infrastructure.Repository
     public class UnitOfWork : IUnitOfWork
     {
         public ICategoryRepository Categories { get; private set; }
+        public IProductRepository Products { get; private set; }
         private readonly MyWebAppContext _context;
 
         public UnitOfWork(MyWebAppContext context) 
         {
             _context = context;
             Categories = new CategoryRepository(context);
+            Products = new ProductRepository(context);
         }
 
 

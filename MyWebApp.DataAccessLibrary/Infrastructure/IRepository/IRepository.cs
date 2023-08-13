@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Linq.Expressions;
 
 namespace MyWebApp.DataAccessLibrary.Infrastructure.IRepository
 {
@@ -21,18 +16,12 @@ namespace MyWebApp.DataAccessLibrary.Infrastructure.IRepository
         /// <param name="predicate"></param>
         /// <returns></returns>
         T GetT(Expression<Func<T, bool>> predicate);
-        
+
         /// <summary>
         /// Add Data
         /// </summary>
         /// <param name="entity"></param>
         void Add(T entity);
-
-        /// <summary>
-        /// Update Data
-        /// </summary>
-        /// <param name="entity"></param>
-        //void Update(T entity);
 
         /// <summary>
         /// Delete Data

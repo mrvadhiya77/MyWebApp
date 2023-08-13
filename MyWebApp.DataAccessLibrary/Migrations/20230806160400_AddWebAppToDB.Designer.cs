@@ -6,7 +6,7 @@ using MyWebApp.DataAccesLayer.Data;
 
 #nullable disable
 
-namespace MyWebApp.Migrations
+namespace MyWebApp.DataAccessLibrary.Migrations
 {
     [DbContext(typeof(MyWebAppContext))]
     [Migration("20230806160400_AddWebAppToDB")]
