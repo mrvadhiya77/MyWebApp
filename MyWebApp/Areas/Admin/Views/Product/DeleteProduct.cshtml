@@ -1,4 +1,4 @@
-﻿@model Category
+﻿@model Product
 
 @*Edit category form*@
 <form method="post">
@@ -10,14 +10,24 @@
         <input type="hidden" asp-for="Id" />
         <div asp-validation-summary="All"></div>
         <div class="row mb-3">
-            <label asp-for="Name">Category Name</label>
+            <label asp-for="Name">Product Name</label>
             <input disabled asp-for="Name" class="form-control"/>
             <span asp-validation-for="Name" class="text-danger"></span>
         </div>
         <div class="row mb-3">
-            <label asp-for="DisplayOrder">Display Order</label>
-            <input disabled asp-for="DisplayOrder" class="form-control" />
-            <span asp-validation-for="DisplayOrder" class="text-danger"></span>
+            <label asp-for="Description">Description</label>
+            <input disabled asp-for="Description" class="form-control" />
+            <span asp-validation-for="Description" class="text-danger"></span>
+        </div>
+        <div class="row mb-3">
+            <label asp-for="Price">Peice</label>
+            <input disabled asp-for="Price" class="form-control" />
+            <span asp-validation-for="Price" class="text-danger"></span>
+        </div>
+        <div class="row mb-3">
+            <label asp-for="CategoryId">CategoryId</label>
+            <input disabled asp-for="CategoryId" class="form-control" />
+            <span asp-validation-for="CategoryId" class="text-danger"></span>
         </div>
         <button class="btn btn-primary" type="submit">Delete</button>
     </div>
