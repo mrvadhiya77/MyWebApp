@@ -8,14 +8,14 @@ namespace MyWebApp.DataAccessLibrary.Infrastructure.IRepository
         /// Get All data
         /// </summary>
         /// <returns></returns>
-        IEnumerable<T> GetAll();
+        IEnumerable<T> GetAll(string? includeProperties=null);
 
         /// <summary>
         /// Get Data By Id
         /// </summary>
         /// <param name="predicate"></param>
         /// <returns></returns>
-        T GetT(Expression<Func<T, bool>> predicate);
+        T GetT(Expression<Func<T, bool>> predicate, string? includeProperties=null);
 
         /// <summary>
         /// Add Data

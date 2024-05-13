@@ -76,7 +76,7 @@ namespace MyWebApp.Areas.Admin.Controllers
         //}
         #endregion
 
-        #region Edit Category
+        #region Add Edit Category
         [HttpGet]
         public IActionResult AddEditCategory(int? id)
         {

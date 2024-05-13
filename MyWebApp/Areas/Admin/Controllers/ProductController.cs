@@ -16,11 +16,15 @@ namespace MyWebApp.Areas.Admin.Controllers
             _hostingEnvironment = hostingEnvironment;
         }
 
+        public IActionResult GetData()
+        {
+            var products = _unitWork.Products.GetAll(includeProperties:"Category");
+            return Json(new { data = products } );
+        }
+
         public IActionResult Index()
         {
-            ProductVM productVM = new ProductVM();
-            productVM.products = _unitWork.Products.GetAll();
-            return View(productVM);
+            return View();
         }
 
         [HttpGet]
@@ -55,25 +59,26 @@ namespace MyWebApp.Areas.Admin.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult AddEditProduct(ProductVM ProductVM, IFormFile? file)
+        public IActionResult AddEditProduct(ProductVM ProductVM, IFormFile? fileUpload)
         {
             if (ModelState.IsValid)
             {
                 string fileName = string.Empty;
-                if (file != null)
+                if (fileUpload != null)
                 {
                     string uploadDir = Path.Combine(_hostingEnvironment.WebRootPath, "Image");
-                    fileName = Guid.NewGuid().ToString() + "-" + file.FileName;
+                    fileName = Guid.NewGuid().ToString() + "-" + fileUpload.FileName;
                     string filePath = Path.Combine(uploadDir, fileName);
                     using (var fileStream = new FileStream(filePath, FileMode.Create))
                     {
-                        file.CopyTo(fileStream);
+                        fileUpload.CopyTo(fileStream);
                     }
                     ProductVM.product.ImageUrl = @"\Image\" + fileName;
                 }
                 if (ProductVM.product.Id == 0)
                 {
                     _unitWork.Products.Add(ProductVM.product);
+                    TempData["success"] = "Product Added Successfully !";
 
                 }
                 _unitWork.Save();

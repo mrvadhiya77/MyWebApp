@@ -1,4 +1,4 @@
-﻿@model MyWebApp.Models.ViewModels.ProductVM
+﻿@*@model MyWebApp.Models.ViewModels.ProductVM*@
 @{
     ViewData["Title"] = "Show Product";
 }
@@ -13,7 +13,7 @@
         </div>
     </div>
 </div>
-<table class="table table-bordered table-striped" style="width=100%">
+<table class="table table-bordered table-striped" id="productTable" style="width:100%">
     <thead>
         <tr>
             <th>
@@ -26,12 +26,12 @@
                 Price
             </th>
             <th>
-                Category Id
+                Category 
             </th>
         </tr>
     </thead>
 
-    <tbody>
+@*    <tbody>
         @foreach(var item in Model.products)
         {   
         <tr>
@@ -44,7 +44,7 @@
             <td>
                 @item.Price
             </td>
-            <td>
+           <td>
                 @item.CategoryId
             </td>
             <td class="group">
@@ -53,6 +53,9 @@
             </td>
         </tr>
         }
-    </tbody>
+    </tbody>*@
 </table>
 
+@section scripts{
+    <script src="~/js/Product.js"></script>
+}
