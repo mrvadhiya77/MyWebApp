@@ -28,11 +28,14 @@
             <th>
                 Category 
             </th>
+            <th>
+                Action
+            </th>
         </tr>
     </thead>
 
-@*    <tbody>
-        @foreach(var item in Model.products)
+ <tbody>
+        @*@foreach(var item in Model.products)
         {   
         <tr>
             <td>
@@ -52,8 +55,8 @@
                     <a asp-action="DeleteProduct" asp-controller="Product" asp-route-id="@item.Id"><i class="bi bi-trash-fill"></i></a>
             </td>
         </tr>
-        }
-    </tbody>*@
+        }*@
+    </tbody>
 </table>
 
 @section scripts{
