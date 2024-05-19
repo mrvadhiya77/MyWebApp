@@ -1,7 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using MyWebApp.DataAccessLibrary.Infrastructure.IRepository;
+using MyWebApp.Models;
 using MyWebApp.Models.ViewModels;
+using System.Timers;
+
 namespace MyWebApp.Areas.Admin.Controllers
 {
     [Area("Admin")]
@@ -18,8 +21,8 @@ namespace MyWebApp.Areas.Admin.Controllers
 
         public IActionResult GetData()
         {
-            var products = _unitWork.Products.GetAll(includeProperties:"Category");
-            return Json(new { data = products } );
+            var products = _unitWork.Products.GetAll(includeProperties: "Category");
+            return Json(new { data = products });
         }
 
         public IActionResult Index()
@@ -59,27 +62,44 @@ namespace MyWebApp.Areas.Admin.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult AddEditProduct(ProductVM ProductVM, IFormFile? fileUpload)
+        public IActionResult AddEditProduct(ProductVM productVM, IFormFile? fileUpload)
         {
             if (ModelState.IsValid)
             {
                 string fileName = string.Empty;
                 if (fileUpload != null)
                 {
+                    // Create Path for new product image store
                     string uploadDir = Path.Combine(_hostingEnvironment.WebRootPath, "Image");
                     fileName = Guid.NewGuid().ToString() + "-" + fileUpload.FileName;
                     string filePath = Path.Combine(uploadDir, fileName);
+
+                    if (productVM.product.ImageUrl != null)
+                    {
+                        // Delete Image Physically When Product was edited
+                        var oldImagePath = Path.Combine(_hostingEnvironment.WebRootPath, productVM.product.ImageUrl.TrimStart('\\'));
+                        if (System.IO.File.Exists(oldImagePath))
+                        {
+                            System.IO.File.Delete(oldImagePath);
+                        }
+                    }
+
+                    //Store New Image To Created Path For Add and Edit 
                     using (var fileStream = new FileStream(filePath, FileMode.Create))
                     {
                         fileUpload.CopyTo(fileStream);
                     }
-                    ProductVM.product.ImageUrl = @"\Image\" + fileName;
+                    productVM.product.ImageUrl = @"\Image\" + fileName;
                 }
-                if (ProductVM.product.Id == 0)
+                if (productVM.product.Id == 0)
                 {
-                    _unitWork.Products.Add(ProductVM.product);
+                    _unitWork.Products.Add(productVM.product);
                     TempData["success"] = "Product Added Successfully !";
-
+                }
+                else
+                {
+                    _unitWork.Products.Update(productVM.product);
+                    TempData["success"] = "Product Updated Successfully !";
                 }
                 _unitWork.Save();
                 return RedirectToAction("Index");
@@ -88,34 +108,44 @@ namespace MyWebApp.Areas.Admin.Controllers
         }
 
 
-        [HttpGet]
-        public IActionResult DeleteProduct(int? id)
-        {
-            if (id == null || id == 0)
-            {
-                return NotFound();
-            }
-            var product = _unitWork.Products.GetT(x => x.Id == id);
-            if (product == null)
-            {
-                return NotFound();
-            }
-            return View(product);
-        }
+        //[HttpGet]
+        //public IActionResult DeleteProduct(int? id)
+        //{
+        //    if (id == null || id == 0)
+        //    {
+        //        return NotFound();
+        //    }
+        //    var product = _unitWork.Products.GetT(x => x.Id == id);
+        //    if (product == null)
+        //    {
+        //        return NotFound();
+        //    }
+        //    return View(product);
+        //}
 
-        [HttpPost, ActionName("DeleteProduct")]
-        [ValidateAntiForgeryToken]
-        public IActionResult DeleteData(int? id)
+        [HttpDelete]
+        public IActionResult Delete(int? id)
         {
             var product = _unitWork.Products.GetT(x => x.Id == id);
             if (product == null)
             {
-                return NotFound();
+                return Json(new { success = false, messege = "Error in Fetching Data" });
             }
-            _unitWork.Products.Delete(product);
-            _unitWork.Save();
-            TempData["success"] = "Product Deleted Successfully !";
-            return RedirectToAction("Index");
+            else
+            {
+                // Delete Image Physically From wwwroot
+                var oldImagePath = Path.Combine(_hostingEnvironment.WebRootPath, product.ImageUrl.TrimStart('\\'));
+                if (System.IO.File.Exists(oldImagePath))
+                {
+                    System.IO.File.Delete(oldImagePath);
+                }
+                //Delete Record From DataBase
+                _unitWork.Products.Delete(product);
+                _unitWork.Save();
+                return Json(new { success = true, messege = "Product Deleted Successfully" });
+            }
+            //TempData["success"] = "Product Deleted Successfully !";
+            //return RedirectToAction("Index");
         }
     }
 }

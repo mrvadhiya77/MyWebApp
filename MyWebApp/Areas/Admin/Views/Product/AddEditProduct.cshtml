@@ -3,6 +3,7 @@
 @*Edit product form*@
 <form method="post" enctype="multipart/form-data">
     <input type="hidden" asp-for="product.Id" />
+    <input type="hidden" asp-for="product.ImageUrl" />
     <div class="border p-3 mt-4">
         <div class="row pb-3">
             <h2 class="text-primary">@((Model.product == null || Model.product.Id == 0) ? "Add" : "Update") Product</h2>
@@ -16,7 +17,7 @@
         </div>
         <div class="row mb-3">
             <label asp-for="product.Description">Description</label>
-            <input asp-for="product.Description" class="form-control" />
+            <textarea asp-for="product.Description" class="form-control"></textarea>
             <span asp-validation-for="product.Description" class="text-danger"></span>
         </div>
         <div class="row mb-3">
@@ -45,6 +46,9 @@
         }
         
     </div>
+    <div class="text-start">
+        <a asp-action="Index" asp-controller="Product">Back to List</a>
+    </div>
 </form>
 
 @*Add script for client side error handling*@
@@ -52,7 +56,23 @@
     @{
         <partial name="_ValidationScriptsPartial" />
     }
-    <script>
+    <script type="text/javascript">
+
+        //timymce for textarea field
+        tinymce.init({
+            selector: 'textarea',
+            plugins: 'anchor autolink charmap codesample emoticons image link lists media searchreplace table visualblocks wordcount checklist mediaembed casechange export formatpainter pageembed linkchecker a11ychecker tinymcespellchecker permanentpen powerpaste advtable advcode editimage advtemplate ai mentions tinycomments tableofcontents footnotes mergetags autocorrect typography inlinecss markdown',
+            toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table mergetags | addcomment showcomments | spellcheckdialog a11ycheck typography | align lineheight | checklist numlist bullist indent outdent | emoticons charmap | removeformat',
+            tinycomments_mode: 'embedded',
+            tinycomments_author: 'Author name',
+            mergetags_list: [
+                { value: 'First.Name', title: 'First Name' },
+                { value: 'Email', title: 'Email' },
+            ],
+            ai_request: (request, respondWith) => respondWith.string(() => Promise.reject("See docs to implement AI Assistant")),
+        });
+
+
         function ValidateEmpty(){
             if(document.getElementById("ImageFile").value == ""){
                 Swal.fire({
