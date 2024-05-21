@@ -2,6 +2,9 @@ using Microsoft.EntityFrameworkCore;
 using MyWebApp.DataAccesLayer.Data;
 using MyWebApp.DataAccessLibrary.Infrastructure.IRepository;
 using MyWebApp.DataAccessLibrary.Infrastructure.Repository;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
+using MyWebApp.CommonHelperRole;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,6 +17,19 @@ builder.Services.AddDbContext<MyWebAppContext>(options =>
 {
     options.UseMySql(connectionStrings, ServerVersion.AutoDetect(connectionStrings));
 });
+
+//builder.Services.AddDefaultIdentity<IdentityUser>()
+//    .AddEntityFrameworkStores<MyWebAppContext>();
+
+// Add Role For User Like Admin Or Customer
+builder.Services.AddIdentity<IdentityUser, IdentityRole>().AddDefaultTokenProviders()
+    .AddEntityFrameworkStores<MyWebAppContext>();
+
+// Add Singleton EmailSender Service For Register Menu
+builder.Services.AddSingleton<IEmailSender, EmailSender>();
+
+// Add Razor Pages Service
+builder.Services.AddRazorPages();
 
 var app = builder.Build();
 
@@ -29,8 +45,12 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
+app.UseAuthentication();;
 
 app.UseAuthorization();
+
+// Razor pages mapping
+app.MapRazorPages();
 
 app.MapControllerRoute(
     name: "default",
