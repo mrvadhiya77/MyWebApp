@@ -7,7 +7,7 @@ namespace MyWebApp.Areas.Customer.Controllers
 {
     [Area("Customer")]
     public class HomeController : Controller
-    { 
+    {
         private readonly ILogger<HomeController> _logger;
         private readonly IUnitOfWork _unitOfWork;
 
@@ -19,8 +19,25 @@ namespace MyWebApp.Areas.Customer.Controllers
 
         public IActionResult Index()
         {
-            IEnumerable<Product> products = _unitOfWork.Products.GetAll(includeProperties:"Category");
+            IEnumerable<Product> products = _unitOfWork.Products.GetAll(includeProperties: "Category");
             return View(products);
+        }
+
+        /// <summary>
+        /// Add Details controller and view for product
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpGet]
+        public IActionResult Details(int? id)
+        {
+            Cart cart= new Cart()
+            {
+                Product = _unitOfWork.Products.GetT(p => p.Id == id, includeProperties: "Category"),
+                Count=1
+            };
+            return View(cart);
+
         }
 
         public IActionResult Privacy()

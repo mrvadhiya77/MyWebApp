@@ -10,6 +10,8 @@ namespace MyWebApp.DataAccessLibrary.Infrastructure.IRepository
     {
         ICategoryRepository Categories { get; }
         IProductRepository Products { get; }
+        ICartRepository Carts { get; }
+        IApplicationUserRepository ApplicationUsers { get; }
 
         void Save();
     }
