@@ -12,5 +12,17 @@ namespace MyWebApp.DataAccessLibrary.Infrastructure.Repository
         {
             _context = context;
         }
+
+        public int IncrementCartItem(Cart cart, int Count)
+        {
+            cart.Count += Count;
+            return cart.Count;
+        }
+
+        public int DecrementCartItem(Cart cart, int Count)
+        {
+            cart.Count -= Count;
+            return cart.Count;
+        }
     }
 }

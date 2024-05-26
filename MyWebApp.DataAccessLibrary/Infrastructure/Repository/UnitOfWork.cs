@@ -1,10 +1,5 @@
 ﻿using MyWebApp.DataAccesLayer.Data;
 using MyWebApp.DataAccessLibrary.Infrastructure.IRepository;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MyWebApp.DataAccessLibrary.Infrastructure.Repository
 {

@@ -28,6 +28,14 @@ builder.Services.AddIdentity<IdentityUser, IdentityRole>().AddDefaultTokenProvid
 // Add Singleton EmailSender Service For Register Menu
 builder.Services.AddSingleton<IEmailSender, EmailSender>();
 
+// For Cookie
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    options.AccessDeniedPath = $"/Identity/Account/AccessDenied";
+    options.LoginPath = $"/Identity/Account/Login";
+    options.LogoutPath = $"/Identity/Account/Logout";
+});
+
 // Add Razor Pages Service
 builder.Services.AddRazorPages();
 

@@ -1,11 +1,16 @@
-﻿namespace MyWebApp.Models
+﻿using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+
+namespace MyWebApp.Models
 {
     public class Cart
     {
         public int Id { get; set; }
-        public string ProductId { get; set; }
+        public int ProductId { get; set; }
+        [ValidateNever ] 
         public Product Product { get; set; }
-        public int ApplicationUserId { get; set; }
+        [ValidateNever]
+        public string ApplicationUserId { get; set; }
+        [ValidateNever]
         public ApplicationUser ApplicationUser { get; set; }
         public int Count { get; set; }
     }

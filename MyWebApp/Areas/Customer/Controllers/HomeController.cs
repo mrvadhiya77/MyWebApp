@@ -1,7 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using MyWebApp.DataAccessLibrary.Infrastructure.IRepository;
 using MyWebApp.Models;
 using System.Diagnostics;
+using System.Security.Claims;
 
 namespace MyWebApp.Areas.Customer.Controllers
 {
@@ -29,14 +31,51 @@ namespace MyWebApp.Areas.Customer.Controllers
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpGet]
-        public IActionResult Details(int? id)
+        public IActionResult Details(int? ProductId)
         {
-            Cart cart= new Cart()
+            Cart cart = new Cart()
             {
-                Product = _unitOfWork.Products.GetT(p => p.Id == id, includeProperties: "Category"),
-                Count=1
+                Product = _unitOfWork.Products.GetT(p => p.Id == ProductId, includeProperties: "Category"),
+                Count = 1,
+                ProductId = (int)ProductId
             };
             return View(cart);
+
+        }
+
+        /// <summary>
+        /// Post Method For Cart
+        /// </summary>
+        /// <param name="cart"></param>
+        /// <returns></returns>
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize]
+        public IActionResult Details(Cart cart)
+        {
+            if (ModelState.IsValid)
+            {
+                // Get Logged In User's Identity (Name, ID etc.)
+                var claimsIdentity = (ClaimsIdentity)User.Identity;
+                // Get NameIdentifier From claimsIdentity
+                var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
+                cart.ApplicationUserId = claim.Value;
+
+                // Get Cart Item For Update Case
+                var cartItem = _unitOfWork.Carts.GetT(x => x.ProductId == cart.ProductId && x.ApplicationUserId == claim.Value);
+
+                if (cartItem == null)
+                {
+                    _unitOfWork.Carts.Add(cart);
+                }
+                else
+                {
+                    _unitOfWork.Carts.IncrementCartItem(cartItem, cart.Count);
+                }
+
+                _unitOfWork.Save();
+            }
+            return RedirectToAction("Index");
 
         }
 
