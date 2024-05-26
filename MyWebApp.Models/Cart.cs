@@ -13,5 +13,6 @@ namespace MyWebApp.Models
         [ValidateNever]
         public ApplicationUser ApplicationUser { get; set; }
         public int Count { get; set; }
+        public double singleItemTotal { get; set; }
     }
 }

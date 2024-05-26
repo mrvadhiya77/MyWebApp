@@ -8,7 +8,7 @@ namespace MyWebApp.DataAccessLibrary.Infrastructure.IRepository
         /// Get All data
         /// </summary>
         /// <returns></returns>
-        IEnumerable<T> GetAll(string? includeProperties=null);
+        IEnumerable<T> GetAll(Expression<Func<T, bool>>? predicate = null,string? includeProperties=null);
 
         /// <summary>
         /// Get Data By Id
