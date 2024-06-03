@@ -12,6 +12,8 @@ namespace MyWebApp.DataAccessLibrary.Infrastructure.IRepository
         IProductRepository Products { get; }
         ICartRepository Carts { get; }
         IApplicationUserRepository ApplicationUsers { get; }
+        IOrderHeaderRepository OrderHeaders { get; }
+        IOrderDetailRepository OrderDetails { get; }
 
         void Save();
     }

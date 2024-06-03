@@ -12,6 +12,10 @@ namespace MyWebApp.DataAccessLibrary.Infrastructure.Repository
 
         public IApplicationUserRepository ApplicationUsers { get; private set; }
 
+        public IOrderHeaderRepository OrderHeaders { get; private set; }
+
+        public IOrderDetailRepository OrderDetails { get; private set; }
+
         private readonly MyWebAppContext _context;
 
         public UnitOfWork(MyWebAppContext context)
@@ -21,6 +25,8 @@ namespace MyWebApp.DataAccessLibrary.Infrastructure.Repository
             Products = new ProductRepository(context);
             Carts = new CartRepository(context);
             ApplicationUsers = new ApplicationUserRepository(context);
+            OrderHeaders = new OrderHeaderRepository(context);
+            OrderDetails = new OrderDetailRepository(context);
         }
 
         public void Save()
