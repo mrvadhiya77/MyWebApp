@@ -1,6 +1,8 @@
-﻿namespace MyWebApp.DataAccessLibrary.Infrastructure.IRepository
+﻿using MyWebApp.Models;
+
+namespace MyWebApp.DataAccessLibrary.Infrastructure.IRepository
 {
-    public interface IApplicationUserRepository
+    public interface IApplicationUserRepository : IRepository<ApplicationUser>
     {
     }
 }

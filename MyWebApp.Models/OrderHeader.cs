@@ -23,8 +23,7 @@ namespace MyWebApp.Models
         public DateTime DueDate {  get; set; }
         [Required]
         public string Phone {  get; set; }
-        [Required]
-        public string Address { get; set; }
+        public string Address { get; set; } = string.Empty;
         [Required]
         public string City { get; set;  }
         [Required]
