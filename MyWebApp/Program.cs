@@ -5,6 +5,7 @@ using MyWebApp.DataAccessLibrary.Infrastructure.Repository;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using MyWebApp.CommonHelperRole;
+using Stripe;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,6 +18,9 @@ builder.Services.AddDbContext<MyWebAppContext>(options =>
 {
     options.UseMySql(connectionStrings, ServerVersion.AutoDetect(connectionStrings));
 });
+
+// Stripe Configuration
+builder.Services.Configure<StripeSetting>(builder.Configuration.GetSection("PaymentSetting"));
 
 //builder.Services.AddDefaultIdentity<IdentityUser>()
 //    .AddEntityFrameworkStores<MyWebAppContext>();
@@ -53,6 +57,8 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
+//Store Stripe Api SecretKey
+StripeConfiguration.ApiKey = builder.Configuration.GetSection("PaymentSetting:SecretKey").Get<string>();
 app.UseAuthentication();;
 
 app.UseAuthorization();
