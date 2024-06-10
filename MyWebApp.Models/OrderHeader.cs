@@ -19,18 +19,17 @@ namespace MyWebApp.Models
         public string? Carrier { get; set; }
         public string? SessionId { get; set; }
         public string? PaymentIntentId { get; set; }
-        public DateTime DayOfPayment {  get; set; }
-        public DateTime DueDate {  get; set; }
-        [Required]
-        public string Phone {  get; set; }
-        public string Address { get; set; } = string.Empty;
-        [Required]
-        public string City { get; set;  }
-        [Required]
-        public string state {  get; set; }
-        [Required]
-        public string Postal { get; set; }
-        [Required]
-        public string Name {  get; set; }
+        public DateTime DayOfPayment { get; set; }
+        public DateTime DueDate { get; set; }
+
+        public string? Phone { get; set; }
+        public string? Address { get; set; }
+
+        public string? City { get; set; }
+
+        public string? state { get; set; }
+        public string? Postal { get; set; }
+
+        public string? Name { get; set; }
     }
 }

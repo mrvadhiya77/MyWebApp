@@ -4,7 +4,10 @@ using MyWebApp.CommonHelperRole;
 using MyWebApp.DataAccessLibrary.Infrastructure.IRepository;
 using MyWebApp.Models;
 using MyWebApp.Models.ViewModels;
+using Stripe.Checkout;
+using Stripe;
 using System.Security.Claims;
+using System.Diagnostics;
 
 namespace MyWebApp.Areas.Customer.Controllers
 {
@@ -147,11 +150,92 @@ namespace MyWebApp.Areas.Customer.Controllers
                 _unitOfWork.Save();
             }
 
-            _unitOfWork.Carts.DeleteRange(vm.ListOfCart);
+            #region Stripe Payment Checkout
+            //Web Url
+            var domain = "https://localhost:7161/";
+
+            // Add Customer Details FOr International transaction
+            //var custOptions = new CustomerCreateOptions
+            //{
+            //    Name = "John Doe",
+            //    Address = new AddressOptions
+            //    {
+            //        Line1 = "510 Townsend St",
+            //        PostalCode = "98140",
+            //        City = "San Francisco",
+            //        State = "CA",
+            //        Country = "US",
+            //    },
+            //};
+            //var custommerService = new CustomerService();
+            //custommerService.Create(custOptions);
+
+            // Session Create For Cart Item
+            var options = new SessionCreateOptions
+            {
+                LineItems = new List<SessionLineItemOptions>(),
+                Mode = "payment",
+                SuccessUrl = domain + $"Customer/Cart/OrderSuccess?id={vm.OrderHeader.Id}",
+                CancelUrl = domain + $"customer/cart/Index",
+            };
+
+            // Store Purchase Product Details To Stripe Session
+            foreach (var item in vm.ListOfCart)
+            {
+                var lineItemsOptions = new SessionLineItemOptions
+                {
+                    PriceData = new SessionLineItemPriceDataOptions
+                    {
+                        UnitAmount = (long)(item.Product.Price*100),
+                        Currency = "usd",
+                        ProductData = new SessionLineItemPriceDataProductDataOptions
+                        {
+                            Name = item.Product.Name
+                        }
+                    },
+                    Quantity = item.Count
+                };
+
+                // Store Cart Product Data To SessionCreateOptions
+                options.LineItems.Add(lineItemsOptions);
+            }
+
+
+            var service = new SessionService();
+            Session session = service.Create(options);
+
+            // Call PaymentStaus Method Of OrderHeader
+            _unitOfWork.OrderHeaders.PaymentStatus(vm.OrderHeader.Id, session.Id, session.PaymentIntentId);
             _unitOfWork.Save();
-            return RedirectToAction("Index", "Home");
+
+            Response.Headers.Add("Location", session.Url);
+            return new StatusCodeResult(303);
+            #endregion
+
+            //_unitOfWork.Carts.DeleteRange(vm.ListOfCart);
+            //_unitOfWork.Save();
+            //return RedirectToAction("Index", "Home");
         }
 
+
+        public IActionResult OrderSuccess(int id)
+        {
+            //"System.InvalidCastException: 'Unable to cast object of type 'System.DBNull' to type 'System.String'.'"
+            //Error Occur If Database Store Null Value And class Property does not set Nullable
+            var orderHeader = _unitOfWork.OrderHeaders.GetT(x => x.Id == id);
+            var service = new SessionService();
+            Session session = service.Get(orderHeader.SessionId);
+
+            if (session.PaymentStatus.ToLower() == "paid")
+            {
+                _unitOfWork.OrderHeaders.UpdateStatus(id, OrderStatus.StatusApproved, PaymentStatus.StatusApproved);
+            }
+
+            List<Cart> carts = _unitOfWork.Carts.GetAll(x => x.Id == id).ToList();
+            _unitOfWork.Carts.DeleteRange(carts);
+            _unitOfWork.Save();
+            return View(id);
+        }
         #endregion
     }
 }

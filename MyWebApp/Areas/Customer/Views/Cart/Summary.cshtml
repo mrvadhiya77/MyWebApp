@@ -1,4 +1,7 @@
 ﻿@model  MyWebApp.Models.ViewModels.CartVM;
+@using Microsoft.Extensions.Options
+@inject IOptions<MyWebApp.CommonHelperRole.StripeSetting> Stripe
+
 @{
     ViewData["Title"] = "Summary";
 }
