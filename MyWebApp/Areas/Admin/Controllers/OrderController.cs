@@ -75,5 +75,59 @@ namespace MyWebApp.Areas.Admin.Controllers
             return View(orderVM);
 
         }
+
+        [HttpPost]
+        public IActionResult OrderDetail(OrderVM orderVM)
+        {
+            var orderHeader = _unitWork.OrderHeaders.GetT(x => x.Id == orderVM.OrderHeader.Id);
+            orderHeader.Name = orderVM.OrderHeader.Name;
+            orderHeader.Phone = orderVM.OrderHeader.Phone;
+            orderHeader.Address = orderVM.OrderHeader.Address;
+            orderHeader.City = orderVM.OrderHeader.City;
+            orderHeader.state = orderVM.OrderHeader.state;
+            orderHeader.Postal = orderVM.OrderHeader.Postal;
+
+            if(orderVM.OrderHeader.Carrier != null)
+            {
+                orderHeader.Carrier = orderVM.OrderHeader.Carrier;
+            }
+
+            if(orderVM.OrderHeader.TrackingNumber != null)
+            {
+                orderHeader.TrackingNumber = orderVM.OrderHeader.TrackingNumber;
+            }
+
+            _unitWork.OrderHeaders.Update(orderHeader);
+            _unitWork.Save();
+            TempData["success"] = "Info Updated Successfully";
+
+            return RedirectToAction("OrderDetails", "Order", new { id = orderVM.OrderHeader.Id});
+
+        }
+
+        public IActionResult InProcess(OrderVM orderVM)
+        {
+            _unitWork.OrderHeaders.UpdateStatus(orderVM.OrderHeader.Id, OrderStatus.StatusInProgres);
+            _unitWork.Save();
+            TempData["success"] = "Order Status Updated-InProcess";
+
+            return RedirectToAction("OrderDetails", "Order", new { id = orderVM.OrderHeader.Id });
+
+        }
+
+        public IActionResult Shipped(OrderVM orderVM)
+        {
+            var orderHeader = _unitWork.OrderHeaders.GetT(x => x.Id == orderVM.OrderHeader.Id);
+            orderHeader.Carrier = orderVM.OrderHeader.Carrier;
+            orderHeader.TrackingNumber = orderVM.OrderHeader.TrackingNumber;
+            orderHeader.OrderStatus = orderVM.OrderHeader.OrderStatus;
+            orderHeader.DateOfShipping = DateTime.Now;
+            _unitWork.OrderHeaders.Update(orderHeader);
+            _unitWork.Save();
+            TempData["success"] = "Order Status Updated-Shipped";
+
+            return RedirectToAction("OrderDetails", "Order", new { id = orderVM.OrderHeader.Id });
+
+        }
     }
 }
