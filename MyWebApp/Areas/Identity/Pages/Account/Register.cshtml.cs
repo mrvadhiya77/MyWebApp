@@ -19,6 +19,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
 using MyWebApp.CommonHelperRole;
+using MyWebApp.DataAccessLibrary.Infrastructure.IRepository;
 using MyWebApp.Models;
 using NuGet.Protocol.Plugins;
 
@@ -33,6 +34,7 @@ namespace MyWebApp.Areas.Identity.Pages.Account
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailSender _emailSender;
         private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly IUnitOfWork _unitOfWork;
 
         public RegisterModel(
             UserManager<IdentityUser> userManager,
@@ -40,7 +42,8 @@ namespace MyWebApp.Areas.Identity.Pages.Account
             SignInManager<IdentityUser> signInManager,
             ILogger<RegisterModel> logger,
             IEmailSender emailSender,
-            RoleManager<IdentityRole> roleManager)
+            RoleManager<IdentityRole> roleManager,
+            IUnitOfWork unitOfWork)
         {
             _userManager = userManager;
             _userStore = userStore;
@@ -49,6 +52,7 @@ namespace MyWebApp.Areas.Identity.Pages.Account
             _logger = logger;
             _emailSender = emailSender;
             _roleManager = roleManager;
+            _unitOfWork = unitOfWork;
         }
 
         /// <summary>
@@ -130,6 +134,16 @@ namespace MyWebApp.Areas.Identity.Pages.Account
                 _roleManager.CreateAsync(new IdentityRole(WebsiteRole.Role_Employee)).GetAwaiter().GetResult();
             }
 
+
+            //checked SuperAdmin Or Not and assign admin role if user email match
+            var users = _unitOfWork.ApplicationUsers.GetAll();
+            foreach(var user in users)
+            {
+                if(user.Email == "abc@admin.com")
+                {
+                    _userManager.AddToRoleAsync(user, WebsiteRole.Role_Admin).Wait();
+                }
+            }
             ReturnUrl = returnUrl;
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
         }

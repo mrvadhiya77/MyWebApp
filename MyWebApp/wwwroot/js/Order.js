@@ -1,8 +1,22 @@
 ﻿var oTable;
 $(document).ready(function () {
+
+    // Search Window Location
+    var url = window.location.search;
+    if (url.includes("pending")) {
+        OrderTable("pending")
+    } else {
+        if (url.includes("approved")) {
+            OrderTable("approved")
+        }
+    }
+   
+});
+function OrderTable(status) {
+    let ordUrl = String.isEmpty(status) ? "/Admin/Order/GetData" : "/Admin/Order/GetData?status=" + status;
     oTable = $("#orderTable").DataTable({
         ajax: {
-            url: "/Admin/Order/GetData"
+            url: ordUrl
         },
         columns: [
             { data: 'name' },
@@ -13,11 +27,10 @@ $(document).ready(function () {
                 data: "id",
                 render: function (data) {
                     return `
-                        <a href = "/Admin/Order/AddEditOrder?id=${data}"><i class="bi bi-pencil-square"></i></a>`
-                    
+                        <a href = "/Admin/Order/OrderDetail?id=${data}"><i class="bi bi-pencil-square"></i></a>`
+
                 }
             }
         ]
     });
-
-});
+}

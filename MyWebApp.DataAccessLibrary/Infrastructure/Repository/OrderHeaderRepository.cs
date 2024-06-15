@@ -22,6 +22,7 @@ namespace MyWebApp.DataAccessLibrary.Infrastructure.Repository
         public void PaymentStatus(int Id, string SessionId, string PaymentIntentId)
         {
             var orderHeader = _context.OrderHeaders.FirstOrDefault(x => x.Id == Id);
+            orderHeader.DayOfPayment = DateTime.Now;
             orderHeader.PaymentIntentId = PaymentIntentId;
             orderHeader.SessionId = SessionId;
         }
