@@ -45,6 +45,17 @@ builder.Services.ConfigureApplicationCookie(options =>
 
 // Add Razor Pages Service
 builder.Services.AddRazorPages();
+// Enable Cache Memory
+builder.Services.AddDistributedMemoryCache();
+// Add Session
+builder.Services.AddSession(options =>
+{
+    //Session TimeOut
+    options.IdleTimeout = TimeSpan.FromMinutes(100);
+    //For Session Key Enabled
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true;
+});
 
 var app = builder.Build();
 
@@ -69,6 +80,7 @@ app.UseAuthentication();;
 
 app.UseAuthorization();
 
+app.UseSession(); // Use Session
 // Razor pages mapping
 app.MapRazorPages();
 

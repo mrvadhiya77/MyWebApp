@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MyWebApp.DataAccessLibrary.Infrastructure.IRepository;
+using MyWebApp.DataAccessLibrary.Infrastructure.Repository;
 using MyWebApp.Models;
 using System.Diagnostics;
 using System.Security.Claims;
@@ -67,13 +68,17 @@ namespace MyWebApp.Areas.Customer.Controllers
                 if (cartItem == null)
                 {
                     _unitOfWork.Carts.Add(cart);
+                    _unitOfWork.Save();
+                    //Add Cart item count into session
+                    HttpContext.Session.SetInt32("SessionCart", _unitOfWork.Carts.GetAll(x => x.ApplicationUserId == claim.Value).ToList().Count);
                 }
                 else
                 {
                     _unitOfWork.Carts.IncrementCartItem(cartItem, cart.Count);
+                    _unitOfWork.Save();
                 }
 
-                _unitOfWork.Save();
+                
             }
             return RedirectToAction("Index");
 
