@@ -6,12 +6,15 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using MyWebApp.CommonHelperRole;
 using Stripe;
+using MyWebApp.DataAccessLibrary.DBInitializer;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+//Add Service To Create Login User
+builder.Services.AddScoped<IDbInitializer, DbInitializer>();
 // Configuration for mysql database
 var connectionStrings = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<MyWebAppContext>(options =>
@@ -59,6 +62,9 @@ app.UseStaticFiles();
 app.UseRouting();
 //Store Stripe Api SecretKey
 StripeConfiguration.ApiKey = builder.Configuration.GetSection("PaymentSetting:SecretKey").Get<string>();
+//Call method of this class - Middleware
+dataSedding();
+
 app.UseAuthentication();;
 
 app.UseAuthorization();
@@ -71,3 +77,12 @@ app.MapControllerRoute(
     pattern: "{area=Customer}/{controller=Home}/{action=Index}/{id?}");
 
 app.Run();
+
+void dataSedding()
+{
+   using(var scope = app.Services.CreateScope())
+    {
+        var DbInitializer = scope.ServiceProvider.GetRequiredService<IDbInitializer>();
+        DbInitializer.Initialize();
+    }
+}

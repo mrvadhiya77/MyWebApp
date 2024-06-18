@@ -1,5 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using MyWebApp.CommonHelperRole;
 using MyWebApp.DataAccessLibrary.Infrastructure.IRepository;
 using MyWebApp.Models;
 using MyWebApp.Models.ViewModels;
@@ -8,6 +10,7 @@ using System.Timers;
 namespace MyWebApp.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Authorize(Roles = WebsiteRole.Role_Admin)]
     public class ProductController : Controller
     {
         private IUnitOfWork _unitWork;

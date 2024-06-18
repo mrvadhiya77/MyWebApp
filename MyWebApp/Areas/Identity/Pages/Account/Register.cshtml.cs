@@ -123,27 +123,27 @@ namespace MyWebApp.Areas.Identity.Pages.Account
 
         public async Task OnGetAsync(string returnUrl = null)
         {
-            //Check User Role Of Admin
-            if (!_roleManager.RoleExistsAsync(WebsiteRole.Role_Admin).GetAwaiter().GetResult())
-            {
-                // Create Admin Role
-                _roleManager.CreateAsync(new IdentityRole(WebsiteRole.Role_Admin)).GetAwaiter().GetResult();
-                // Create User Role
-                _roleManager.CreateAsync(new IdentityRole(WebsiteRole.Role_User)).GetAwaiter().GetResult();
-                // Create Employee Role
-                _roleManager.CreateAsync(new IdentityRole(WebsiteRole.Role_Employee)).GetAwaiter().GetResult();
-            }
+            ////Check User Role Of Admin
+            //if (!_roleManager.RoleExistsAsync(WebsiteRole.Role_Admin).GetAwaiter().GetResult())
+            //{
+            //    // Create Admin Role
+            //    _roleManager.CreateAsync(new IdentityRole(WebsiteRole.Role_Admin)).GetAwaiter().GetResult();
+            //    // Create User Role
+            //    _roleManager.CreateAsync(new IdentityRole(WebsiteRole.Role_User)).GetAwaiter().GetResult();
+            //    // Create Employee Role
+            //    _roleManager.CreateAsync(new IdentityRole(WebsiteRole.Role_Employee)).GetAwaiter().GetResult();
+            //}
 
 
-            //checked SuperAdmin Or Not and assign admin role if user email match
-            var users = _unitOfWork.ApplicationUsers.GetAll();
-            foreach(var user in users)
-            {
-                if(user.Email == "abc@admin.com")
-                {
-                    _userManager.AddToRoleAsync(user, WebsiteRole.Role_Admin).Wait();
-                }
-            }
+            ////checked SuperAdmin Or Not and assign admin role if user email match
+            //var users = _unitOfWork.ApplicationUsers.GetAll();
+            //foreach(var user in users)
+            //{
+            //    if(user.Email == "abc@admin.com")
+            //    {
+            //        _userManager.AddToRoleAsync(user, WebsiteRole.Role_Admin).Wait();
+            //    }
+            //}
             ReturnUrl = returnUrl;
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
         }
@@ -173,6 +173,10 @@ namespace MyWebApp.Areas.Identity.Pages.Account
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User created a new account with password.");
+
+                    //Custom
+                    // Assign Default Role
+                    await _userManager.AddToRoleAsync(user, WebsiteRole.Role_User);
 
                     var userId = await _userManager.GetUserIdAsync(user);
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);

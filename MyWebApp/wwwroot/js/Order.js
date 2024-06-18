@@ -5,20 +5,24 @@ $(document).ready(function () {
     var url = window.location.search;
     if (url.includes("pending")) {
         OrderTable("pending");
-    } else {
-        if (url.includes("approved")) {
-            OrderTable("approved")
-        } else {
-            OrderTable();
-        }
     }
-   
+    else if (url.includes("approved")) {
+        OrderTable("approved")
+    }
+    else if (url.includes("underprocess")) {
+        OrderTable("underprocess")
+    }
+    else if (url.includes("shipped")) {
+        OrderTable("shipped")
+    }
+    else {
+        OrderTable("all")
+    }
 });
 function OrderTable(status) {
-    let ordUrl = status == undefined || status == "" || status ==null ? "/Admin/Order/GetData" : "/Admin/Order/GetData?status=" + status;
     oTable = $("#orderTable").DataTable({
         ajax: {
-            url: ordUrl
+            url: "/Admin/Order/GetData?status=" + status
         },
         columns: [
             { data: 'name' },

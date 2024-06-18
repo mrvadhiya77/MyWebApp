@@ -15,6 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\MyWebApp.CommonHelperRole\MyWebApp.CommonHelperRole.csproj" />
     <ProjectReference Include="..\MyWebApp.Models\MyWebApp.Models.csproj" />
   </ItemGroup>
 

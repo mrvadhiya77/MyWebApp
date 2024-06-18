@@ -4,12 +4,13 @@
     ViewData["Title"] = "Order Detail";
 }
 
-<div class="container">
-    <div class="row">
-        <div class="col-md-4 order-md-2 mb-4">
-            <form class="needs-validation" method="post" novalidate="">
+<form class="needs-validation" method="post" novalidate="">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4 order-md-2 mb-4">
+
                 <h4 class="d-flex justify-content-between align-items-center mb-3">
-                    <span class="text-muted">Order Summary</span>
+                    <span class="text-muted">Order Summary - @Model.OrderHeader.OrderStatus</span>
                     <span class="badge badge-secondary badge-pill">3</span>
                 </h4>
                 <ul class="list-group mb-3">
@@ -41,18 +42,24 @@
                     @if (Model.OrderHeader.OrderStatus == OrderStatus.StatusInProgres)
                     {
 
-                        <button asp-action="Shipped" class="btn btn-success col-md-12 btn-lg btn-block mt-1" type="submit">Ship Order</button>
+                        <button asp-action="Shipped" onclick="return ValidateEmpty()" class="btn btn-success col-md-12 btn-lg btn-block mt-1" type="submit">Ship Order</button>
                     }
-                    @if (Model.OrderHeader.OrderStatus != OrderStatus.StatusRefund || Model.OrderHeader.OrderStatus != OrderStatus.StatusCalcelled)
+                    @if (Model.OrderHeader.OrderStatus != OrderStatus.StatusRefund && Model.OrderHeader.OrderStatus != OrderStatus.StatusCalcelled)
                     {
-                        <button class="btn btn-dark col-md-12 btn-lg btn-block mt-1" type="submit">Cancel Order</button>
+                        <button asp-action="CancelOrder" class="btn btn-dark col-md-12 btn-lg btn-block mt-1" type="submit">Cancel Order</button>
+                    }
+                    else
+                    {
+                        @if (User.IsInRole(WebsiteRole.Role_User) && Model.OrderHeader.OrderStatus == OrderStatus.StatusPending)
+                        {
+                            <button asp-action="PayNow" class="btn btn-success col-md-12 btn-lg btn-block mt-1" type="submit">Cancel Order</button>
+                        }
                     }
                 }
-            </form>
-        </div>
-        <div class="col-md-8 order-md-1">
-            <h4 class="mb-3">Pickup Details</h4>
-            <form class="needs-validation" method="post" novalidate="">
+
+            </div>
+            <div class="col-md-8 order-md-1">
+                <h4 class="mb-3">Pickup Details</h4>
                 <input type="hidden" asp-for="OrderHeader.Id " />
                 <div class="mb-3">
                     @if (User.IsInRole(WebsiteRole.Role_Admin) || User.IsInRole(WebsiteRole.Role_Employee))
@@ -145,7 +152,7 @@
                 </div>
                 <div class="mb-3">
                     <label asp-for="OrderHeader.ApplicationUser.Email">Email</label>
-                    <input asp-for="OrderHeader.ApplicationUser.Email" type="email" class="form-control" id="email" placeholder="Email">
+                    <input readonly asp-for="OrderHeader.ApplicationUser.Email" type="email" class="form-control" id="email" placeholder="Email">
                 </div>
                 <div class="mb-3">
                     <label asp-for="OrderHeader.DateOfOrder"> Order Date</label>
@@ -203,7 +210,37 @@
                 </div>
 
                 <button type="submit" class="btn btn-primary btn-lg btn-block">Update Order</button>
-            </form>
+            </div>
         </div>
     </div>
-</div>
+</form>
+
+@*Add script for client side error handling*@
+@section scripts {
+    @{
+        <partial name="_ValidationScriptsPartial" />
+    }
+    <script type="text/javascript">
+
+        function ValidateEmpty() {
+            if (document.getElementById("tracking").value == "") {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Upload Tracking',
+                })
+                return false;
+            }
+            if (document.getElementById("carrier").value == "") {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Upload Carrier',
+                })
+                return false;
+            }
+            return true;
+
+        }
+    </script>
+}

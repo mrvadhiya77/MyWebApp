@@ -214,7 +214,7 @@ namespace MyWebApp.Areas.Customer.Controllers
 
             //_unitOfWork.Carts.DeleteRange(vm.ListOfCart);
             //_unitOfWork.Save();
-            //return RedirectToAction("Index", "Home");
+            return RedirectToAction("Index", "Home");
         }
 
 
