@@ -1,5 +1,5 @@
-﻿@using Microsoft.AspNetCore.Http
-@inject IHttpContextAccessor httpContext; 
+﻿@* @using Microsoft.AspNetCore.Http
+@inject IHttpContextAccessor httpContext; *@
 
 <!DOCTYPE html>
 <html lang="en">
@@ -37,31 +37,31 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="Admin" asp-controller="Category" asp-action="Index">Category</a>
                         </li>
-                        @* Check Session Cart Null orr Null and Set it to cart *@                        
-                        @if(httpContext.HttpContext.Session.GetInt32("Session") != null)
+                        @* Check Session Cart Null orr Null and Set it to cart *@
+                        @*  @if (httpContext.HttpContext.Session.GetInt32("SessionCart") != null)
                         {
-                            
+
                         <li class="nav-item">
-                            <a class="nav-link" asp-area="Customer" asp-controller="Cart" asp-action="Index"><i class="bi bi-cart"></i>
-                                    (@httpContext.HttpContext.Session.GetInt32("SessionCart"))
-                                </a>
-                            </li>
+                        <a class="nav-link" asp-area="Customer" asp-controller="Cart" asp-action="Index"><i class="bi bi-cart"></i>
+                        (@httpContext.HttpContext.Session.GetInt32("SessionCart"))
+                        </a>
+                        </li>
                         }
                         else
                         {
-                            <li class="nav-item">
-                                <a class="nav-link" asp-area="Customer" asp-controller="Cart" asp-action="Index">
-                                    <i class="bi bi-cart"></i>
-                                    (0)
-                                </a>
-                            </li>
-                        }
+                        } *@
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="Customer" asp-controller="Cart" asp-action="Index">
+
+                                @await Component.InvokeAsync("Cart")
+                            </a>
+                        </li>
 
                     </ul>
                     <partial name="_LoginPartial" />
                     @* <form class="d-flex">
-                        <input class="form-control me-sm-2" type="search" placeholder="Search">
-                        <button class="btn btn-secondary my-2 my-sm-0" type="submit">Search</button>
+                    <input class="form-control me-sm-2" type="search" placeholder="Search">
+                    <button class="btn btn-secondary my-2 my-sm-0" type="submit">Search</button>
                     </form> *@
                 </div>
             </div>
@@ -84,7 +84,7 @@
     <script src="~/js/site.js" asp-append-version="true"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="//cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
-     @*Toaster Link*@
+    @*Toaster Link*@
     <script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
     @*TinyMICE Link for textarea*@
     <script src="https://cdn.tiny.cloud/1/s5gyl59u59z4qhk8ord4a3tijevfgryr4dul2ekddynvfhqi/tinymce/7/tinymce.min.js" referrerpolicy="origin"></script>

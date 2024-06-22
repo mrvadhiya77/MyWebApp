@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MyWebApp.CommonHelperRole;
 using MyWebApp.DataAccessLibrary.Infrastructure.IRepository;
@@ -62,6 +62,8 @@ namespace MyWebApp.Areas.Customer.Controllers
             if (cart.Count <= 1)
             {
                 _unitOfWork.Carts.Delete(cart);
+                var count = _unitOfWork.Carts.GetAll(x => x.ApplicationUserId == cart.ApplicationUserId).ToList().Count - 1;
+                HttpContext.Session.SetInt32("SessionCart", count);
             }
             else
             {
@@ -76,6 +78,9 @@ namespace MyWebApp.Areas.Customer.Controllers
             var cart = _unitOfWork.Carts.GetT(x => x.Id == id);
             _unitOfWork.Carts.Delete(cart);
             _unitOfWork.Save();
+
+            var count = _unitOfWork.Carts.GetAll(x => x.ApplicationUserId == cart.ApplicationUserId).ToList().Count;
+            HttpContext.Session.SetInt32("SessionCart", count);
             return RedirectToAction(nameof(Index));
         }
         #endregion

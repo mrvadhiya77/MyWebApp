@@ -9,7 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyWebApp.Models", "MyWebApp
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyWebApp.DataAccessLibrary", "MyWebApp.DataAccessLibrary\MyWebApp.DataAccessLibrary.csproj", "{297EDEA9-10AE-42ED-9E7D-179BE446B681}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyWebApp.CommonHelperRole", "MyWebApp.CommonHelperRole\MyWebApp.CommonHelperRole.csproj", "{0A9F5814-5A1D-4363-A9DD-122634EDDAC1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyWebApp.CommonHelperRole", "MyWebApp.CommonHelperRole\MyWebApp.CommonHelperRole.csproj", "{0A9F5814-5A1D-4363-A9DD-122634EDDAC1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -62,7 +62,7 @@ namespace MyWebApp.Areas.Customer.Controllers
                 var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
                 cart.ApplicationUserId = claim.Value;
 
-                // Get Cart Item For Update Case
+                // Get Cart Item (If cart Include Perticular Item or not) For Update Case
                 var cartItem = _unitOfWork.Carts.GetT(x => x.ProductId == cart.ProductId && x.ApplicationUserId == claim.Value);
 
                 if (cartItem == null)

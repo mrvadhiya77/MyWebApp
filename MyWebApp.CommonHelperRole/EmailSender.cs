@@ -25,7 +25,7 @@ namespace MyWebApp.CommonHelperRole
                 //smtp.gmail.com-host, 587-port, MailKit.Security.SecureSocketOptions.StartTls - Security
                 emailClient.Connect("smtp.gmail.com", 587, MailKit.Security.SecureSocketOptions.StartTls);
                 // Set UserId and Password
-                emailClient.Authenticate("UserId", "Password");
+                emailClient.Authenticate("sanjayvadhiya7777@gmail.com", "Password");
                 emailClient.SendAsync(toEmail);
                 //Disconnect
                 emailClient.Disconnect(true);
